@@ -17,6 +17,7 @@ def readFileMakeT(file_name: str) :
    itemList = []
 
    file = open(file_name, "r")
+   #exception needed
 
    lines = file.readlines()
 
@@ -29,21 +30,55 @@ def readFileMakeT(file_name: str) :
    return setList, itemList
 
 
+# make frequent itemsets
+# 빈번항목집합을 만들어준다.
+# return : frequentItemsets : list
+def makeFrequentItemsets(setList : list, itemList : list, min_sup : int):
+   
+   nextsetList = []
+   nextItemList = []
+
+   for item in itemList :
+      count = 0
+
+      for set in setList :
+         if (item - set) is False:
+            count += 1
+      
+      if count > min_sup :
+         nextItemList.append(item)
+   
+   if len(nextItemList) == 1:
+      return nextItemList
+
+   for i in range(len(nextItemList) - 1):
+      for j in range(i, len(nextItemList)) : 
+         newset = nextItemList[i] + nextItemList[j]
+         if newset not in nextsetList:
+            nextsetList.append(newset)
+   
+
+
 
 # main function
 def main():
    file_name = ""
+   min_sup = 0
 
-   if len(sys.argv) != 2:
-      print("Entering no transaction file or too many transaction files.\n"
-      + "Show the result by using transaction1.txt file.")
+   if len(sys.argv) != 3:
+      print("Entering wrong arguments.\n"
+      + "Show the result by using transaction1.txt file.\n"
+      + "The minimum support count threshold set as 3.\n")
       file_name = "transactions1.txt"
+      min_sup = 3
    else :
       file_name = sys.argv[1]
+      min_sup = int(sys.argv[2])
+      
 
    setList, itemList = readFileMakeT(file_name)
 
-
+   
 
 
 
